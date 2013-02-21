@@ -10,7 +10,7 @@ public class MySQLConnection {
  
     private static Connection conn = null;
  
-    // Hostname
+    // Hostname bb
     private static String dbHost = "127.0.0.1";
  
     // Port -- Standard: 3306
