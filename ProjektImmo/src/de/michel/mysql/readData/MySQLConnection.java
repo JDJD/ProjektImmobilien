@@ -29,11 +29,11 @@ public class MySQLConnection {
         try {
  
         	
-            // Datenbanktreiber für ODBC Schnittstellen laden.
+            // Datenbanktreiber für ODBC Schnittstellen 
             Class.forName("com.mysql.jdbc.Driver");
              
             // Verbindung zur ODBC-Datenbank 'testdb' herstellen.
-            // Es wird die JDBC-ODBC-Brücke verwendet.
+
             conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"
                     + dbPort + "/" + database + "?" + "user=" + dbUser + "&"
                     + "password=" + dbPassword);
@@ -44,12 +44,46 @@ public class MySQLConnection {
         }
     }
      
+    public static void insertName(String firstName, String lastName)
+    {
+        conn = getInstance();
+         
+        if(conn != null)
+        {
+            // Anfrage-Statement erzeugen.
+            Statement query;
+            try {
+                query = conn.createStatement();
+ 
+                // Ergebnistabelle erzeugen und abholen.
+                String sql = "INSERT INTO actor(first_name, last_name) VALUES('" + firstName + "', '" + lastName +"')";
+                query.executeUpdate(sql);
+                 
+                // Es wird der letzte Datensatz abgefragt
+                ResultSet result = query.executeQuery("SELECT actor_id, first_name, last_name FROM actor ORDER BY actor_id desc LIMIT 1");
+                 
+                // Wenn ein Datensatz gefunden wurde, wird auf diesen Zugegriffen 
+                if(result.next())
+                {
+                    System.out.println("(" + result.getInt(1) + ")" + result.getString(2) + " " + result.getString(3));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    
+    
     private static Connection getInstance()
     {
         if(conn == null)
             new MySQLConnection();
         return conn;
     }
+    
+       
+    
     /**
      * Schreibt die Namensliste in die Konsole
      */
